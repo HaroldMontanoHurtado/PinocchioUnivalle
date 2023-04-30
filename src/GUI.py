@@ -1,9 +1,9 @@
-from customtkinter import CTk, CTkFrame
+import customtkinter as ctk
 
-root = CTk()
+root = ctk.CTk()
 
-root.geometry('500x600+350+20')
+root.geometry('680x600')
 root.minsize(480, 500)
-root.title('Pinocchio - Inteligencia Artificial')
+root.title('Pinocchio - Artificial intelligence')
 
 root.mainloop()
