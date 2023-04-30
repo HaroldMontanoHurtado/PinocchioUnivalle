@@ -1,6 +1,6 @@
-from customtkinter import CTk, CTkFrame
+import customtkinter as ctk
 
-root = CTk()
+root = ctk.CTk()
 
 root.geometry('680x600')
 root.minsize(480, 500)
