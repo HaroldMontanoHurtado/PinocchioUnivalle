@@ -81,9 +81,12 @@ optionmenu.place(x=disHorinzButt, y=495)
 tabView = ctk.CTkTabview(master=main_frame, width=500, height=530)
 tabView.place(x=160,y=50)
 
-
 tabView.add('Game')
 tabView.add('Map')
 
+# Ensayo para ver si se creaba dentro del tabview (y sí)
+label_tab = ctk.CTkLabel(master=tabView, text="Prueba label", fg_color="transparent",
+                     width=80, height=30, font=('Comic Sans MS', 23))
+label_tab.place(x=0,y=0)
 
 root.mainloop()
