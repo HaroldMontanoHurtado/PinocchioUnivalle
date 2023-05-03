@@ -1,4 +1,5 @@
 from customtkinter import *
+from PIL import ImageTk, Image
 
 class Window(CTk):
     def __init__(self, *args, **kwargs):
@@ -22,7 +23,8 @@ class Window(CTk):
         self.buttons()
         self.switchs()
         self.optionMenus()
-        self.tabviews()
+        #self.tabviews()
+        self.images()
 
     def labels(self):
         label = CTkLabel(
@@ -93,6 +95,23 @@ class Window(CTk):
             master=tabView, text="Prueba label", fg_color="transparent",
             width=80, height=30, font=('Comic Sans MS', 23))
         label_tab.place(x=0,y=0)
+
+    def images(self):
+        img_Scenario = ImageTk.PhotoImage(Image.open('img/Scenario.png'))
+        img_Pinocchio = ImageTk.PhotoImage(Image.open('img/PinocchioPerdido.png'))
+        img_Gepetto = ImageTk.PhotoImage(Image.open('img/Gepetto.png'))
+        img_Smoking = ImageTk.PhotoImage(Image.open('img/Smoking.png'))
+        img_Fox = ImageTk.PhotoImage(Image.open('img/ThiefFox.png'))
+        
+        try:
+            CTkLabel(master=self, text='',image=img_Scenario).place(x=160, y=80)
+            # Agete y obstaculos
+            CTkLabel(master=self, text='',image=img_Pinocchio).place(x=160, y=180)
+            CTkLabel(master=self, text='',image=img_Gepetto).place(x=360, y=280)
+            CTkLabel(master=self, text='',image=img_Smoking).place(x=460, y=480)
+            CTkLabel(master=self, text='',image=img_Fox).place(x=560, y=80)
+        except:
+            print('Error al crear los labels')
 
 if __name__=="__main__":
     window = Window()
