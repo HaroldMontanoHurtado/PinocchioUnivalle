@@ -23,7 +23,7 @@ class Window(CTk):
         self.switchs()
         self.optionMenus()
         self.tabviews()
-        
+
     def labels(self):
         label = CTkLabel(
             master=self, text="Maps", fg_color="transparent",
@@ -97,11 +97,3 @@ class Window(CTk):
 if __name__=="__main__":
     window = Window()
     window.mainloop()
-
-""" ------------------------- MAIN FRAME -------------------------
-En este frame se trabajará todo los componentes que se van a agregar para la app.
-
-main_frame = ctk.CTkFrame(master=root, width=wventana, height=hventana)
-main_frame.place(x=0,y=0)
-
-"""
