@@ -61,3 +61,6 @@ def obtener_vecinos(matriz, nodo):
         vecinos.append(vecino_abj) 
 
     return vecinos
+
+def option_BFS():
+    print('Seleccionó el button de la clase BFS')

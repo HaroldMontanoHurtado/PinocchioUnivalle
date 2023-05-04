@@ -79,3 +79,5 @@ def leer_matriz_desde_archivo(nombre_archivo):
         matriz.append(fila)
     return matriz
 
+def option_UCS():
+    print('Seleccionó el button de la clase UCS')
