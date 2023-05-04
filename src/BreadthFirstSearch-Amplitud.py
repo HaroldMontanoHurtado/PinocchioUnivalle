@@ -1,5 +1,5 @@
 from queue import Queue
-
+#Amplitud
 class Nodo:
     def __init__(self, x, y, costo, padre=None):
         self.x = x
