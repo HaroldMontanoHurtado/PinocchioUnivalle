@@ -15,46 +15,52 @@ class Nodo:
     # Método que devuelve una representación en cadena del nodo
     def __str__(self):
         return f"({self.x}, {self.y}): {self.costo}"
+    
+    # Función que verifica si una celda está dentro de los límites de la matriz y es transitable
+def es_valido(matriz, x, y):
+    filas = len(matriz)
+    columnas = len(matriz[0])
+    if x < 0 or y < 0 or x >= filas or y >= columnas or matriz[x][y] == -1:
+        return False
+    return True
 
 # Función que realiza la búsqueda por costo uniforme
-def busqueda_costo_uniforme(matriz, inicio, fin):
-    # Crear una cola de prioridad vacía y agregar el nodo de inicio
-    cola_prioridad = []
-    heapq.heappush(cola_prioridad, inicio)
-
-    # Crear un conjunto vacío para almacenar los nodos visitados
-    visitados = set()
-
-    # Bucle principal de búsqueda
-    while cola_prioridad:
-        # Sacar el nodo de menor costo de la cola de prioridad
+def busqueda_costo_uniforme(matriz, inicio, objetivo):
+    # Crear el nodo de inicio y agregarlo a la cola de prioridad
+    nodo_inicio = Nodo(inicio[0], inicio[1], 0, None)
+    cola_prioridad = [nodo_inicio]
+    heapq.heapify(cola_prioridad)
+    
+    # Crear un diccionario para rastrear los nodos explorados y sus costos
+    nodos_explorados = {inicio: 0}
+    
+    # Ejecutar la búsqueda hasta que la cola de prioridad esté vacía o se encuentre el objetivo
+    while len(cola_prioridad) > 0:
+        # Extraer el nodo con el costo más bajo de la cola de prioridad
         nodo_actual = heapq.heappop(cola_prioridad)
-
-        # Comprobar si el nodo actual es el nodo final
-        if nodo_actual.x == fin[0] and nodo_actual.y == fin[1]:
-            # Si es así, construir el camino y devolverlo
-            camino = []
-            while nodo_actual:
-                camino.append((nodo_actual.x, nodo_actual.y))
+        
+        # Comprobar si se ha alcanzado el objetivo
+        if (nodo_actual.x, nodo_actual.y) == objetivo:
+            # Reconstruir la ruta desde el nodo objetivo hasta el nodo inicial
+            ruta = []
+            while nodo_actual is not None:
+                ruta.append((nodo_actual.x, nodo_actual.y))
                 nodo_actual = nodo_actual.padre
-            camino.reverse()
-            return camino
-
-        # Si no es el nodo final, agregarlo al conjunto de nodos visitados
-        visitados.add((nodo_actual.x, nodo_actual.y))
-
-        # Expandir el nodo actual y agregar sus vecinos a la cola de prioridad
-        for vecino in obtener_vecinos(matriz, nodo_actual):
-            if (vecino.x, vecino.y) not in visitados:
+            return list(reversed(ruta))
+        
+        # Obtener los vecinos del nodo actual y agregarlos a la cola de prioridad si aún no se han explorado
+        vecinos = obtener_vecinos(matriz, nodo_actual)
+        for vecino in vecinos:
+            if es_valido(matriz, vecino.x, vecino.y) and (vecino.x, vecino.y) not in nodos_explorados:
+                nodos_explorados[(vecino.x, vecino.y)] = vecino.costo
                 heapq.heappush(cola_prioridad, vecino)
-
-    # Si se llega aquí, significa que no se encontró un camino
+    
+    # Si no se encuentra el objetivo, devolver None
     return None
 
 # Función que devuelve una lista de los vecinos de un nodo en la matriz
 def obtener_vecinos(matriz, nodo):
     vecinos = []
-
     # Comprobar los vecinos a la izquierda, derecha, arriba y abajo del nodo
     if nodo.x > 0:
         vecino_izq = Nodo(nodo.x - 1, nodo.y, nodo.costo + matriz[nodo.x - 1][nodo.y], nodo)
@@ -71,13 +77,5 @@ def obtener_vecinos(matriz, nodo):
     
     return vecinos
 
-def leer_matriz_desde_archivo(nombre_archivo):
-    matriz = []
-    with open(nombre_archivo, "r") as archivo:
-        for linea in archivo:
-            fila = [int(x) for x in linea.split()]
-        matriz.append(fila)
-    return matriz
-
-def option_UCS():
-    print('Seleccionó el button de la clase UCS')
+def prueba():
+    print('La prueba de UCS funciona')

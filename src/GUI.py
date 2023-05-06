@@ -1,7 +1,8 @@
 from customtkinter import *
 from PIL import ImageTk, Image
-from numpy import loadtxt
-from customtkinter import ctk
+from numpy import *
+#Ejemplo. Válido solamente para el mapa01
+route = [(1,0),(2,0),(3,0),(3,1),(3,2)]
 
 class Window(CTk):
     def __init__(self, *args, **kwargs):
@@ -20,12 +21,14 @@ class Window(CTk):
         self.resizable(0,0)
         # componentes agregados
         self.disHorinzButt = 20
+        self.stalling = 0
+        self.value_node = 0
         
         self.tabView()
         self.optionMenus()
         self.labels()
         self.buttons()
-        self.switchs()
+        #self.switchs()
         #self.images() # será inicializado cuando se elija el mapa
 
     def labels(self):
@@ -43,6 +46,7 @@ class Window(CTk):
             print("button IDFS pressed")
         def funcion_button_steps():
             print("button steps pressed")
+            self.moves()
         
         global button_BFS, button_IDFS, button_UCS, button_Steps
         # Se crean como globas para hacer alternar el estado del boton
@@ -98,7 +102,7 @@ class Window(CTk):
             self.activateButton(button_UCS)
             self.activateButton(button_Steps)
             
-            self.images() # se llama la función que enseña las imagenes (el mapa)
+            self.images(map) # se llama la función que enseña las imagenes (el mapa)
 
         optionmenu = CTkOptionMenu(
             master=self, values=["map01", "map02", "map03"],
@@ -106,9 +110,11 @@ class Window(CTk):
         optionmenu.set("Maps")
         optionmenu.place(x=self.disHorinzButt, y=510)
 
-    def images(self):
+    def images(self, map):
         img_mindWall = ImageTk.PhotoImage(
             Image.open('img/MindWall.png'))  # bloqueo-> 0
+        img_Scenario = ImageTk.PhotoImage(
+            Image.open('img/Scenario.png'))  # casilla-> 1
         img_Smoking = ImageTk.PhotoImage(
             Image.open('img/Smoking.png'))  # cigarrillos-> 2
         img_Fox = ImageTk.PhotoImage(
@@ -118,24 +124,25 @@ class Window(CTk):
         img_Gepetto = ImageTk.PhotoImage(
             Image.open('img/Gepetto.png'))  # Gepetto-> 5
         
+        CTkLabel(master=self, text='',image=img_Scenario).place(x=160, y=80)
         # Con el bucle organizaremos cada personaje en su sitio, segun la matriz.
         posY = 80 # Las posiciones empiezan inicializadas.
         for filas in map:
             posX = 160 # posX empieza en 160 cada avanza a la siguiente fila.
-            for columnas in filas:
+            for columna in filas:
                 try:
-                    if columnas == 0.0:
-                        CTkLabel(master=self, text='', image=img_mindWall,).place(x=posX, y=posY)
-                    elif columnas == 1.0:
+                    if columna == 0.0:
+                        CTkLabel(master=self, text='Mind Wall', image=img_mindWall,).place(x=posX, y=posY)
+                    elif columna == 1.0:
                         None # No se ejecutara nada, porque no es necesaria una imagen.
-                    elif columnas == 2.0:
-                        CTkLabel(master=self, text='',image=img_Smoking).place(x=posX, y=posY)
-                    elif columnas == 3.0:
-                        CTkLabel(master=self, text='',image=img_Fox).place(x=posX, y=posY)
-                    elif columnas == 4.0:
-                        CTkLabel(master=self, text='',image=img_Pinocchio).place(x=posX, y=posY)
-                    elif columnas == 5.0:
-                        CTkLabel(master=self, text='',image=img_Gepetto).place(x=posX, y=posY)
+                    elif columna == 2.0:
+                        CTkLabel(master=self, text='Cigarettes',image=img_Smoking).place(x=posX, y=posY)
+                    elif columna == 3.0:
+                        CTkLabel(master=self, text='Fox',image=img_Fox).place(x=posX, y=posY)
+                    elif columna == 4.0:
+                        CTkLabel(master=self, text='Pinocchio',image=img_Pinocchio).place(x=posX, y=posY)
+                    elif columna == 5.0:
+                        CTkLabel(master=self, text='Gepetto',image=img_Gepetto).place(x=posX, y=posY)
                     else:
                         print(f"Error en la matriz del {optionmenu.get()}")
                     posX+=100
@@ -144,18 +151,13 @@ class Window(CTk):
             posY+=100
 
     def reader(self):
-        """
-        skiprows: Salta a la linea que le indique el argumento (int)
+        """skiprows: Salta a la linea que le indique el argumento (int)
         ingresado. Esto en caso de que el txt tenga encabezado.
         Cada elemento, en la matriz, es de tipo <class 'numpy.float64'>
         """
         global map
-        
         try:
             map = loadtxt(f'data/{optionmenu.get()}.txt', skiprows=3)
-            #print(f'selecciono el {optionmenu.get()}')
-            print(map)
-            print('datos tipo:', type(map[0][1]))
         except:
             print('Error en la selección del mapa')
 
@@ -173,6 +175,33 @@ class Window(CTk):
         img_Scenario = ImageTk.PhotoImage(
             Image.open('img/Scenario.png'))  # casilla-> 1
         CTkLabel(master=self, text='',image=img_Scenario).place(x=160, y=80)
+
+    def moves(self):
+        #map = map # matrices de tipo ndarray, de numpy
+        location = (int(where(map==4)[0][0]), int(where(map==4)[1][0]))
+        #fil: <class 'numpy.int64'> ,col: <class 'numpy.int64'>
+        try:
+            #En caso de que sea el primer movimiento. El estado inicial
+            if location == route[0]:
+                self.value_node = map[route[self.stalling+1]] # Valor del nodo antes de cambiarlo.
+                # insertamos 1 en donde estaba 4.
+                map[route[self.stalling]] = 1
+                # insertamos 4 en la casilla que avanza
+                map[route[self.stalling+1]] = 4
+                self.images(map)
+                self.stalling+=1
+            else:
+                print('stall:',route[self.stalling])
+                #El 4 se remplaza por el valor almacenado antes
+                map[route[self.stalling]] = self.value_node
+                #Almacenamos el valor del siguiente nodo
+                self.value_node = map[route[self.stalling+1]]
+                #Se puede seguir avanzando mientras hayan coordenadas en el array
+                map[route[self.stalling+1]] = 4
+                self.images(map)
+                self.stalling+=1
+        except:
+                print('Llegó al final de la ruta')
 
 if __name__=="__main__":
     window = Window()
