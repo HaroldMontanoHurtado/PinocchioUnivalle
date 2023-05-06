@@ -1,4 +1,7 @@
 from customtkinter import *
+from BreadthFirstSearch import *
+from IterativeDepthFirstSearch import *
+from UniformCostSearch import *
 from PIL import ImageTk, Image
 from numpy import *
 #Ejemplo. Válido solamente para el mapa01
@@ -95,7 +98,6 @@ class Window(CTk):
         global optionmenu
         
         def optionmenu_callback(choice):
-            print("optionmenu dropdown clicked:", choice)
             self.reader()
             self.activateButton(button_BFS)
             self.activateButton(button_IDFS)
@@ -191,7 +193,6 @@ class Window(CTk):
                 self.images(map)
                 self.stalling+=1
             else:
-                print('stall:',route[self.stalling])
                 #El 4 se remplaza por el valor almacenado antes
                 map[route[self.stalling]] = self.value_node
                 #Almacenamos el valor del siguiente nodo

@@ -76,6 +76,3 @@ def obtener_vecinos(matriz, nodo):
         vecinos.append(vecino_abj) 
     
     return vecinos
-
-def prueba():
-    print('La prueba de UCS funciona')
