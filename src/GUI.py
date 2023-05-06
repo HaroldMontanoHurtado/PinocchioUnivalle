@@ -185,7 +185,7 @@ class Window(CTk):
         button._state='normal'
         button._hover=True
         button._text_color='red'
-        button._border_color='white'
+        button._border_color='gray'
 
     def tabView(self):
         try:
