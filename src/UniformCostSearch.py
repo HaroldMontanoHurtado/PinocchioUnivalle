@@ -17,12 +17,6 @@ class Nodo:
         return f"({self.x}, {self.y}): {self.costo}"
     
     # Función que verifica si una celda está dentro de los límites de la matriz y es transitable
-def es_valido(matriz, x, y):
-    filas = len(matriz)
-    columnas = len(matriz[0])
-    if x < 0 or y < 0 or x >= filas or y >= columnas or matriz[x][y] == -1:
-        return False
-    return True
 
 # Función que realiza la búsqueda por costo uniforme
 def busqueda_costo_uniforme(matriz, inicio, objetivo):
@@ -61,18 +55,33 @@ def busqueda_costo_uniforme(matriz, inicio, objetivo):
 # Función que devuelve una lista de los vecinos de un nodo en la matriz
 def obtener_vecinos(matriz, nodo):
     vecinos = []
-    # Comprobar los vecinos a la izquierda, derecha, arriba y abajo del nodo
-    if nodo.x > 0:
+    # Comprobar los vecinos a la izquierda, derecha, arriba y abajo del nodo, evitando los muros
+    if nodo.x > 0 and matriz[nodo.x - 1][nodo.y] != 0:
         vecino_izq = Nodo(nodo.x - 1, nodo.y, nodo.costo + matriz[nodo.x - 1][nodo.y], nodo)
         vecinos.append(vecino_izq)
-    if nodo.x < len(matriz) - 1:
+    if nodo.x < len(matriz) - 1 and matriz[nodo.x + 1][nodo.y] != 0:
         vecino_der = Nodo(nodo.x + 1, nodo.y, nodo.costo + matriz[nodo.x + 1][nodo.y], nodo)
         vecinos.append(vecino_der)
-    if nodo.y > 0:
+    if nodo.y > 0 and matriz[nodo.x][nodo.y - 1] != 0:
         vecino_arr = Nodo(nodo.x, nodo.y - 1, nodo.costo + matriz[nodo.x][nodo.y - 1], nodo)
         vecinos.append(vecino_arr)
-    if nodo.y < len(matriz[0]) - 1:
+    if nodo.y < len(matriz[0]) - 1 and matriz[nodo.x][nodo.y + 1] != 0:
         vecino_abj = Nodo(nodo.x, nodo.y + 1, nodo.costo + matriz[nodo.x][nodo.y + 1], nodo)
         vecinos.append(vecino_abj) 
     
     return vecinos
+
+# Función que verifica si una celda está dentro de los límites de la matriz, es transitable y no es un muro
+def es_valido(matriz, x, y):
+    filas = len(matriz)
+    columnas = len(matriz[0])
+    if x < 0 or y < 0 or x >= filas or y >= columnas or matriz[x][y] == -1:
+        return False
+    return True
+    """
+    filas = len(matriz)
+    columnas = len(matriz[0])
+    if x < 0 or y < 0 or x >= filas or y >= columnas or matriz[x][y] == -1:
+        return False
+    return True
+    """

@@ -1,27 +1,30 @@
 # Función para realizar la búsqueda por profundidad iterativa
 def buscar_profundidad_iterativa(matriz, objetivo, profundidad_maxima):
     # Inicializa la pila con la raíz del árbol de búsqueda
-    pila = [(matriz, [])]
+    pila = [(matriz, [], 0)]
+    profundidad_actual = 0
 
     # Itera hasta que se encuentre el objetivo o se alcance la profundidad máxima
-    while pila:
+    while pila and profundidad_actual!=profundidad_maxima:
         # Extrae el último elemento de la pila (es decir, el último nodo visitado)
-        nodo, ruta = pila.pop()
+        ruta = pila.pop() # profundidad_actual,
+        nodo = ruta
 
         # Comprueba si el nodo actual es el objetivo
         if nodo == objetivo:
             return ruta + [nodo]
 
         # Comprueba si se ha alcanzado la profundidad máxima
-        if len(ruta) == profundidad_maxima:
-            continue
+        #if profundidad_actual == profundidad_maxima:
+        #    continue
 
         # Genera los hijos del nodo actual
         hijos = generar_hijos(nodo)
 
         # Añade los hijos a la pila
         for hijo in hijos:
-            pila.append((hijo, ruta + [nodo]))
+            pila.append((hijo, ruta + [nodo], profundidad_actual + 1))
+        profundidad_actual+=1
 
     # Si no se encuentra el objetivo, devuelve None
     return None
