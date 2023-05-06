@@ -1,6 +1,6 @@
 from customtkinter import *
 from BreadthFirstSearch import *
-from IterativeDepthFirstSearch import *
+from IterativeDeepeningSearch import *
 from UniformCostSearch import *
 from PIL import ImageTk, Image
 from numpy import *
@@ -57,14 +57,15 @@ class Window(CTk):
             init_location = (int(where(map==4)[0][0]), int(where(map==4)[1][0]))
             final_location = (int(where(map==5)[0][0]), int(where(map==5)[1][0]))
             self.route = busqueda_costo_uniforme(map,init_location,final_location)
-        def funcion_button_IDFS():
+        def funcion_button_IDS():
             self.activateButton(button_Steps)
+            init_location = (int(where(map==4)[0][0]), int(where(map==4)[1][0]))
             final_location = (int(where(map==5)[0][0]), int(where(map==5)[1][0]))
-            self.route = buscar_profundidad_iterativa(map, final_location,5)
+            self.route = ids(map, init_location, final_location)
         def funcion_button_steps():
             self.moves()
         
-        global button_BFS, button_IDFS, button_UCS, button_Steps
+        global button_BFS, button_IDS, button_UCS, button_Steps
         # Se crean como globas para hacer alternar el estado del boton
         button_BFS = CTkButton(
             master=self, text="BFS", command=funcion_button_BFS,
@@ -73,12 +74,12 @@ class Window(CTk):
             font=('Comic Sans MS', 23))
         button_BFS.place(x=self.disHorinzButt, y=80)
 
-        button_IDFS = CTkButton(
-            master=self, text="IDFS", command=funcion_button_IDFS,
+        button_IDS = CTkButton(
+            master=self, text="IDS", command=funcion_button_IDS,
             width=120, height=50, border_width=0, state='disabled',
             text_color_disabled='white', corner_radius=8,
             font=('Comic Sans MS', 23))
-        button_IDFS.place(x=self.disHorinzButt, y=160)
+        button_IDS.place(x=self.disHorinzButt, y=160)
 
         button_UCS = CTkButton(
             master=self, text="UCS", command=funcion_button_UCS,
@@ -113,7 +114,7 @@ class Window(CTk):
         def optionmenu_callback(choice):
             self.reader()
             self.activateButton(button_BFS)
-            self.activateButton(button_IDFS)
+            self.activateButton(button_IDS)
             self.activateButton(button_UCS)
             
             self.images(map) # se llama la función que enseña las imagenes (el mapa)
@@ -179,10 +180,12 @@ class Window(CTk):
             print('Error en la selección del mapa')
 
     def activateButton(self, button):
+        #button = CTkButton()
         button._state='enable'
         button._state='normal'
         button._hover=True
         button._text_color='red'
+        button._border_color='white'
 
     def tabView(self):
         try:
